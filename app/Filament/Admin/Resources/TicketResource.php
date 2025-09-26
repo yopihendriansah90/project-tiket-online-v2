@@ -3,21 +3,23 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\TicketResource\Pages;
-use App\Filament\Admin\Resources\TicketResource\RelationManagers;
 use App\Models\Ticket;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
+    protected static ?string $navigationLabel = 'Tiket';
+    protected static ?string $modelLabel = 'Tiket';
+    protected static ?string $pluralModelLabel = 'Tiket';
+    protected static ?string $navigationGroup = 'Manajemen Event';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -25,7 +27,7 @@ class TicketResource extends Resource
             ->schema([
                 Forms\Components\Group::make()
                     ->schema([
-                        Forms\Components\Section::make('Ticket Details')
+                        Forms\Components\Section::make('Detail Tiket')
                             ->schema([
                                 Forms\Components\Select::make('event_id')
                                     ->relationship('event', 'title')
@@ -37,26 +39,27 @@ class TicketResource extends Resource
                                 Forms\Components\TextInput::make('name')
                                     ->required()
                                     ->maxLength(255)
-                                    ->label('Ticket Name'),
+                                    ->label('Nama Tiket')
+                                    ->placeholder('Contoh: VIP, Reguler, Early Bird'),
 
                                 Forms\Components\RichEditor::make('description')
                                     ->columnSpanFull()
-                                    ->label('Description'),
+                                    ->label('Deskripsi'),
                             ])
                             ->columns(2),
 
-                        Forms\Components\Section::make('Pricing and Inventory')
+                        Forms\Components\Section::make('Harga dan Inventaris')
                             ->schema([
                                 Forms\Components\TextInput::make('price')
                                     ->numeric()
                                     ->prefix('IDR')
                                     ->required()
-                                    ->label('Price'),
+                                    ->label('Harga'),
 
                                 Forms\Components\TextInput::make('quantity')
                                     ->numeric()
                                     ->required()
-                                    ->label('Quantity Available'),
+                                    ->label('Jumlah Tersedia'),
                             ])
                             ->columns(2),
                     ])
@@ -64,29 +67,15 @@ class TicketResource extends Resource
 
                 Forms\Components\Group::make()
                     ->schema([
-                        Forms\Components\Section::make('Availability')
+                        Forms\Components\Section::make('Ketersediaan Penjualan')
                             ->schema([
                                 Forms\Components\DateTimePicker::make('available_from')
                                     ->required()
-                                    ->label('Sales Start'),
+                                    ->label('Penjualan Dimulai'),
 
                                 Forms\Components\DateTimePicker::make('available_to')
                                     ->required()
-                                    ->label('Sales End'),
-                            ]),
-
-                        Forms\Components\Section::make('Seating Options')
-                            ->schema([
-                                Forms\Components\Toggle::make('is_seating_enabled')
-                                    ->label('Enable Numbered Seating')
-                                    ->reactive()
-                                    ->helperText('Enable this if tickets correspond to specific, numbered seats.'),
-
-                                Forms\Components\TextInput::make('seat_area')
-                                    ->label('Seat Area/Section')
-                                    ->placeholder('e.g., VIP, Section A, Balcony')
-                                    ->helperText('Define the area or section this ticket applies to.')
-                                    ->visible(fn ($get) => $get('is_seating_enabled')),
+                                    ->label('Penjualan Berakhir'),
                             ]),
                     ])
                     ->columnSpan(['lg' => 1]),
@@ -99,38 +88,39 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('event.title')
+                    ->label('Event')
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Tiket')
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('price')
+                    ->label('Harga')
                     ->money('idr')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('quantity')
+                    ->label('Jumlah')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('available_from')
-                    ->dateTime()
+                    ->label('Mulai Dijual')
+                    ->dateTime('d M Y, H:i')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('available_to')
-                    ->dateTime()
+                    ->label('Selesai Dijual')
+                    ->dateTime('d M Y, H:i')
                     ->sortable(),
-
-                Tables\Columns\IconColumn::make('is_seating_enabled')
-                    ->label('Seating')
-                    ->boolean(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('event')
-                    ->relationship('event', 'title'),
-
-                Tables\Filters\TernaryFilter::make('is_seating_enabled')
-                    ->label('Numbered Seating'),
+                    ->relationship('event', 'title')
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
