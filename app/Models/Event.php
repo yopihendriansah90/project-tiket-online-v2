@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia; // Kebutuhan Spatie Media Library
 use Spatie\MediaLibrary\InteractsWithMedia; // Kebutuhan Spatie Media Library
-use PHPUnit\Framework\Attributes\Ticket;
 
 class Event extends Model implements HasMedia // Implementasi interface HasMedia
 {
