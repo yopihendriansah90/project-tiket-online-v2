@@ -40,7 +40,7 @@ class OrderResource extends Resource
                                     ->content(fn ($record) => $record->status)
                                     ->helperText(fn ($record) => match($record->status) {
                                         'pending' => 'Pesanan menunggu pembayaran.',
-                                        'paid' => 'Pembayaran telah berhasil pada ' . $record->paid_at->format('d M Y, H:i'),
+                                        'paid' => 'Pembayaran telah berhasil' . ($record->paid_at ? ' pada ' . $record->paid_at->format('d M Y, H:i') : '.'),
                                         'failed' => 'Pembayaran gagal.',
                                         'cancelled' => 'Pesanan telah dibatalkan.',
                                         default => 'Status tidak diketahui.'

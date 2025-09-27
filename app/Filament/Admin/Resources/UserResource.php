@@ -45,7 +45,7 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('password')
                             ->password()
                             ->required(fn(string $operation): bool => $operation === 'create')
-                            ->dehydrated(fn(?string $value) => filled($value))
+                            ->dehydrated(fn ($state) => filled($state))
                             ->maxLength(255),
                         // --- FIELD ROLE BARU ---
                         Select::make('roles')
