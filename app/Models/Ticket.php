@@ -12,21 +12,18 @@ class Ticket extends Model
     protected $fillable = [
         'event_id',
         'name',
-        'description',
         'price',
         'quantity',
-        'seat_area', // <- TAMBAHKAN
-        'is_seating_enabled',
-        'available_from',
-        'available_to',
+        'sale_start_date',
+        'sale_end_date',
+        'is_seated',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'quantity' => 'integer',
-        'available_from' => 'datetime',
-        'available_to' => 'datetime',
-         'is_seating_enabled' => 'boolean', 
+        'price' => 'integer',
+        'is_seated' => 'boolean',
+        'sale_start_date' => 'datetime',
+        'sale_end_date' => 'datetime',
     ];
 
     // Relasi
