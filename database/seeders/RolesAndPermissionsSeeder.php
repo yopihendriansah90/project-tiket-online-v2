@@ -19,13 +19,31 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $this->command->info('Creating Roles...');
         // 2. Create Roles
-        Role::firstOrCreate(['name' => 'Super Admin']);
-        Role::firstOrCreate(['name' => 'Event Manager']);
-        Role::firstOrCreate(['name' => 'User']);
+        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+        $eventManagerRole = Role::firstOrCreate(['name' => 'Event Manager']);
+        $userRole = Role::firstOrCreate(['name' => 'User']);
 
-        // 3. Create Permissions (contoh, karena Super Admin dapat semuanya secara otomatis)
-        // Anda bisa menambahkan permission spesifik di sini jika diperlukan untuk role lain
-        // Contoh: Permission::firstOrCreate(['name' => 'view events']);
+        // 3. Create Permissions
+        $resources = ['attendee', 'event', 'order', 'seat', 'ticket', 'user'];
+        $actions = ['view_any', 'view', 'create', 'update', 'delete', 'delete_any', 'force_delete', 'force_delete_any', 'restore', 'restore_any', 'replicate', 'reorder'];
+
+        $permissions = [];
+        foreach ($resources as $resource) {
+            foreach ($actions as $action) {
+                $permissions[] = Permission::firstOrCreate(['name' => $action . '_' . $resource]);
+            }
+        }
+
+        // 4. Assign Permissions to Roles
+        $superAdminRole->givePermissionTo($permissions);
+        $eventManagerRole->givePermissionTo($permissions);
+
+        $userPermissions = [];
+        foreach ($resources as $resource) {
+            $userPermissions[] = Permission::firstOrCreate(['name' => 'view_any_' . $resource]);
+            $userPermissions[] = Permission::firstOrCreate(['name' => 'view_' . $resource]);
+        }
+        $userRole->givePermissionTo($userPermissions);
 
         $this->command->info('Roles and Permissions created successfully.');
     }

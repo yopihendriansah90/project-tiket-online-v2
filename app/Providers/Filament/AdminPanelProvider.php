@@ -52,21 +52,11 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->plugins([
-                FilamentShieldPlugin::make(),
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-            ])
-            ->middleware([
-                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-                \Illuminate\Session\Middleware\StartSession::class,
-                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-                \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
-                \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            ])
             ->authMiddleware([
                 Authenticate::class,
-                \Filament\Http\Middleware\Authenticate::class,
-
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make()
             ]);
     }
 }
