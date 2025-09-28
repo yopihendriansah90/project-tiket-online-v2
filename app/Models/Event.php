@@ -30,7 +30,6 @@ class Event extends Model implements HasMedia
         'has_numbered_seats' => 'boolean',
         'status' => EventStatus::class
     ];
-
     // Spatie Media Library - WAJIB untuk Filament
     public function registerMediaCollections(): void
     {
