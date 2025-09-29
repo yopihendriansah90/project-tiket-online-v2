@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventTix - Platform Penjualan Tiket Event</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #fce7f3 0%, #fdf2f8 50%, #fff1f2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #be185d 0%, #9d174d 100%);
+            transform: translateY(-1px);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .active-nav {
+            color: #ec4899;
+            border-bottom: 2px solid #ec4899;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-pink-600">EventTix</div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#" onclick="showPage('home')" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Home</a>
+                        <a href="#" onclick="showPage('event')" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Event</a>
+                        <a href="#" onclick="showPage('events')" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Events</a>
+                        <a href="#" onclick="showPage('about')" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">About</a>
+                        <a href="#" onclick="showPage('login')" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Login</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-pink-600">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#" onclick="showPage('home')" class="nav-link-mobile block px-3 py-2 text-gray-700 hover:text-pink-600">Home</a>
+                <a href="#" onclick="showPage('event')" class="nav-link-mobile block px-3 py-2 text-gray-700 hover:text-pink-600">Event</a>
+                <a href="#" onclick="showPage('events')" class="nav-link-mobile block px-3 py-2 text-gray-700 hover:text-pink-600">Events</a>
+                <a href="#" onclick="showPage('about')" class="nav-link-mobile block px-3 py-2 text-gray-700 hover:text-pink-600">About</a>
+                <a href="#" onclick="showPage('login')" class="nav-link-mobile block px-3 py-2 text-gray-700 hover:text-pink-600">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page">
+        <!-- Hero Section -->
+        <section class="gradient-bg pt-20 pb-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
+                        Temukan Event <span class="text-pink-600">Terbaik</span> di Sekitar Anda
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                        Platform terpercaya untuk membeli tiket event musik, konser, seminar, dan acara menarik lainnya dengan mudah dan aman.
+                    </p>
+                    <div class="space-x-4">
+                        <button onclick="showPage('event')" class="btn-primary text-white px-8 py-3 rounded-lg font-semibold text-lg">
+                            Jelajahi Event
+                        </button>
+                        <button onclick="showPage('about')" class="bg-white text-pink-600 border-2 border-pink-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-pink-50 transition-colors">
+                            Pelajari Lebih Lanjut
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Events -->
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Event Populer</h2>
+                    <p class="text-gray-600">Jangan lewatkan event-event menarik yang sedang trending</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 bg-gradient-to-r from-pink-400 to-purple-500"></div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Jakarta Music Festival</h3>
+                            <p class="text-gray-600 mb-4">15 Desember 2024 • Jakarta</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-pink-600">Rp 150.000</span>
+                                <button class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors">
+                                    Beli Tiket
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Tech Conference 2024</h3>
+                            <p class="text-gray-600 mb-4">20 Desember 2024 • Bandung</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-pink-600">Rp 200.000</span>
+                                <button class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors">
+                                    Beli Tiket
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 bg-gradient-to-r from-green-400 to-teal-500"></div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Food Festival Surabaya</h3>
+                            <p class="text-gray-600 mb-4">25 Desember 2024 • Surabaya</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-pink-600">Rp 75.000</span>
+                                <button class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors">
+                                    Beli Tiket
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="py-16 gradient-bg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Mengapa Memilih EventTix?</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Aman & Terpercaya</h3>
+                        <p class="text-gray-600">Transaksi aman dengan sistem keamanan berlapis</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Proses Cepat</h3>
+                        <p class="text-gray-600">Beli tiket dalam hitungan menit</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Event Terbaik</h3>
+                        <p class="text-gray-600">Kurasi event berkualitas tinggi</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Event Page -->
+    <div id="event-page" class="page hidden">
+        <section class="pt-20 pb-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-4">Semua Event</h1>
+                    <p class="text-gray-600">Temukan event yang sesuai dengan minat Anda</p>
+                </div>
+                
+                <!-- Filter -->
+                <div class="mb-8 flex flex-wrap gap-4 justify-center">
+                    <button onclick="filterEvents('all')" class="filter-btn bg-pink-600 text-white px-6 py-2 rounded-full font-medium">Semua</button>
+                    <button onclick="filterEvents('musik')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-medium hover:bg-pink-100">Musik</button>
+                    <button onclick="filterEvents('teknologi')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-medium hover:bg-pink-100">Teknologi</button>
+                    <button onclick="filterEvents('kuliner')" class="filter-btn bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-medium hover:bg-pink-100">Kuliner</button>
+                </div>
+
+                <!-- Event Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="events-container">
+                    <!-- Events will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Events Page -->
+    <div id="events-page" class="page hidden">
+        <section class="pt-20 pb-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-4">Daftar Event Lengkap</h1>
+                    <p class="text-gray-600">Jelajahi semua event menarik dan beli tiketnya sekarang</p>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div class="flex-1 max-w-md">
+                        <input type="text" id="search-events" placeholder="Cari event..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterEventsPage('all')" class="filter-btn-page bg-pink-600 text-white px-4 py-2 rounded-full text-sm font-medium">Semua</button>
+                        <button onclick="filterEventsPage('musik')" class="filter-btn-page bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-100">Musik</button>
+                        <button onclick="filterEventsPage('teknologi')" class="filter-btn-page bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-100">Teknologi</button>
+                        <button onclick="filterEventsPage('kuliner')" class="filter-btn-page bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-100">Kuliner</button>
+                        <button onclick="filterEventsPage('olahraga')" class="filter-btn-page bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-100">Olahraga</button>
+                        <button onclick="filterEventsPage('seni')" class="filter-btn-page bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-pink-100">Seni</button>
+                    </div>
+                </div>
+
+                <!-- Events List -->
+                <div class="space-y-6" id="events-list-container">
+                    <!-- Events will be populated by JavaScript -->
+                </div>
+                
+                <!-- Pagination -->
+                <div class="mt-12 flex justify-center">
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">Previous</button>
+                        <button class="px-4 py-2 bg-pink-600 text-white rounded-lg">1</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">2</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">3</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">Next</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Event Detail Modal -->
+    <div id="event-detail-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="relative">
+                <!-- Event Header -->
+                <div class="h-64 bg-gradient-to-r from-pink-400 to-purple-500 relative" id="event-detail-header">
+                    <button onclick="closeEventDetail()" class="absolute top-4 right-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <h2 class="text-3xl font-bold mb-2" id="detail-event-title">Event Title</h2>
+                        <p class="text-lg opacity-90" id="detail-event-date">Event Date & Location</p>
+                    </div>
+                </div>
+                
+                <!-- Event Content -->
+                <div class="p-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Event Info -->
+                        <div class="lg:col-span-2">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">Tentang Event</h3>
+                            <div class="prose text-gray-600 mb-6" id="detail-event-description">
+                                <!-- Event description will be populated -->
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">📅 Tanggal & Waktu</h4>
+                                    <p class="text-gray-600" id="detail-datetime">-</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">📍 Lokasi</h4>
+                                    <p class="text-gray-600" id="detail-location">-</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">🎫 Kapasitas</h4>
+                                    <p class="text-gray-600" id="detail-capacity">-</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">🏷️ Kategori</h4>
+                                    <p class="text-gray-600" id="detail-category">-</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ticket Purchase -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-xl sticky top-4">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">Beli Tiket</h3>
+                                
+                                <div class="space-y-4" id="ticket-types-container">
+                                    <!-- Ticket types will be populated -->
+                                </div>
+                                
+                                <div class="mt-6 pt-4 border-t border-gray-200">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <span class="font-semibold text-gray-800">Total:</span>
+                                        <span class="text-2xl font-bold text-pink-600" id="detail-total-price">Rp 0</span>
+                                    </div>
+                                    <button onclick="proceedToPurchase()" class="w-full btn-primary text-white py-3 rounded-lg font-semibold" id="purchase-btn" disabled>
+                                        Pilih Tiket Terlebih Dahulu
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about-page" class="page hidden">
+        <section class="pt-20 pb-16 gradient-bg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-4">Tentang EventTix</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Platform terdepan dalam industri penjualan tiket event di Indonesia
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6">Misi Kami</h2>
+                        <p class="text-gray-600 mb-6">
+                            EventTix hadir untuk memudahkan masyarakat Indonesia dalam menemukan dan membeli tiket event berkualitas. Kami berkomitmen untuk menyediakan platform yang aman, mudah digunakan, dan terpercaya.
+                        </p>
+                        <p class="text-gray-600 mb-6">
+                            Dengan teknologi terdepan dan tim yang berpengalaman, kami terus berinovasi untuk memberikan pengalaman terbaik bagi pengguna dan penyelenggara event.
+                        </p>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-pink-600">500+</div>
+                                <div class="text-gray-600">Event Terjual</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-pink-600">50K+</div>
+                                <div class="text-gray-600">Pengguna Aktif</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-pink-400 to-purple-500 rounded-2xl h-96"></div>
+                </div>
+
+                <!-- Team -->
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Tim Kami</h2>
+                    <p class="text-gray-600">Profesional berpengalaman yang berdedikasi</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full mx-auto mb-4"></div>
+                        <h3 class="text-xl font-semibold mb-2">Andi Pratama</h3>
+                        <p class="text-gray-600 mb-2">CEO & Founder</p>
+                        <p class="text-sm text-gray-500">10+ tahun pengalaman di industri teknologi</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full mx-auto mb-4"></div>
+                        <h3 class="text-xl font-semibold mb-2">Sari Dewi</h3>
+                        <p class="text-gray-600 mb-2">CTO</p>
+                        <p class="text-sm text-gray-500">Expert dalam pengembangan platform digital</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-gradient-to-br from-green-400 to-teal-500 rounded-full mx-auto mb-4"></div>
+                        <h3 class="text-xl font-semibold mb-2">Budi Santoso</h3>
+                        <p class="text-gray-600 mb-2">Head of Marketing</p>
+                        <p class="text-sm text-gray-500">Spesialis dalam strategi pemasaran digital</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page hidden">
+        <section class="pt-20 pb-16 gradient-bg min-h-screen flex items-center">
+            <div class="max-w-md mx-auto w-full px-4">
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">Masuk ke EventTix</h1>
+                        <p class="text-gray-600">Selamat datang kembali!</p>
+                    </div>
+                    
+                    <form onsubmit="handleLogin(event)" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent" placeholder="nama@email.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent" placeholder="••••••••">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                                <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
+                            </label>
+                            <a href="#" class="text-sm text-pink-600 hover:text-pink-700">Lupa password?</a>
+                        </div>
+                        <button type="submit" class="w-full btn-primary text-white py-3 rounded-lg font-semibold">
+                            Masuk
+                        </button>
+                    </form>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600">Belum punya akun? <a href="#" class="text-pink-600 hover:text-pink-700 font-medium">Daftar sekarang</a></p>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">Atau masuk dengan</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 grid grid-cols-2 gap-3">
+                            <button class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                Google
+                            </button>
+                            <button class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                Facebook
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Ticket Purchase Modal -->
+    <div id="ticket-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800 mb-2" id="modal-event-title">Event Title</h3>
+                <p class="text-gray-600" id="modal-event-date">Event Date</p>
+            </div>
+            
+            <form onsubmit="handleTicketPurchase(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Tiket</label>
+                    <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500" id="ticket-quantity">
+                        <option value="1">1 Tiket</option>
+                        <option value="2">2 Tiket</option>
+                        <option value="3">3 Tiket</option>
+                        <option value="4">4 Tiket</option>
+                        <option value="5">5 Tiket</option>
+                    </select>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <span class="font-medium">Total Harga:</span>
+                        <span class="text-2xl font-bold text-pink-600" id="total-price">Rp 150.000</span>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="button" onclick="closeTicketModal()" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 btn-primary text-white py-3 rounded-lg font-semibold">
+                        Beli Sekarang
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample events data
+        const events = [
+            {
+                id: 1,
+                title: "Jakarta Music Festival",
+                date: "15 Desember 2024",
+                time: "19:00 - 23:00 WIB",
+                location: "Jakarta",
+                venue: "Gelora Bung Karno Stadium",
+                price: 150000,
+                category: "musik",
+                gradient: "from-pink-400 to-purple-500",
+                capacity: "50,000 orang",
+                description: "Festival musik terbesar di Jakarta dengan lineup artis internasional dan lokal terbaik. Nikmati pengalaman musik yang tak terlupakan dengan sound system berkualitas tinggi dan panggung spektakuler.",
+                ticketTypes: [
+                    { name: "Early Bird", price: 150000, available: true },
+                    { name: "Regular", price: 200000, available: true },
+                    { name: "VIP", price: 350000, available: true }
+                ]
+            },
+            {
+                id: 2,
+                title: "Tech Conference 2024",
+                date: "20 Desember 2024",
+                time: "09:00 - 17:00 WIB",
+                location: "Bandung",
+                venue: "Bandung Convention Center",
+                price: 200000,
+                category: "teknologi",
+                gradient: "from-blue-400 to-indigo-500",
+                capacity: "1,000 orang",
+                description: "Konferensi teknologi terdepan dengan pembicara dari perusahaan teknologi global. Pelajari tren terbaru dalam AI, blockchain, dan teknologi masa depan.",
+                ticketTypes: [
+                    { name: "Student", price: 150000, available: true },
+                    { name: "Professional", price: 200000, available: true },
+                    { name: "Premium", price: 300000, available: true }
+                ]
+            },
+            {
+                id: 3,
+                title: "Food Festival Surabaya",
+                date: "25 Desember 2024",
+                time: "10:00 - 22:00 WIB",
+                location: "Surabaya",
+                venue: "Taman Bungkul",
+                price: 75000,
+                category: "kuliner",
+                gradient: "from-green-400 to-teal-500",
+                capacity: "5,000 orang",
+                description: "Festival kuliner dengan berbagai makanan khas Surabaya dan Jawa Timur. Nikmati cita rasa autentik dari puluhan vendor makanan terpilih.",
+                ticketTypes: [
+                    { name: "General Admission", price: 75000, available: true },
+                    { name: "Food Voucher Package", price: 150000, available: true }
+                ]
+            },
+            {
+                id: 4,
+                title: "Rock Concert Medan",
+                date: "30 Desember 2024",
+                time: "20:00 - 24:00 WIB",
+                location: "Medan",
+                venue: "Medan Convention Center",
+                price: 180000,
+                category: "musik",
+                gradient: "from-red-400 to-pink-500",
+                capacity: "8,000 orang",
+                description: "Konser rock spektakuler dengan band-band rock terbaik Indonesia. Rasakan energi musik rock yang menggelegar di malam tahun baru.",
+                ticketTypes: [
+                    { name: "Standing", price: 180000, available: true },
+                    { name: "Seated", price: 250000, available: true },
+                    { name: "VIP", price: 400000, available: false }
+                ]
+            },
+            {
+                id: 5,
+                title: "Startup Pitch Day",
+                date: "5 Januari 2025",
+                time: "13:00 - 18:00 WIB",
+                location: "Jakarta",
+                venue: "Jakarta Convention Center",
+                price: 100000,
+                category: "teknologi",
+                gradient: "from-purple-400 to-blue-500",
+                capacity: "500 orang",
+                description: "Event networking untuk startup dan investor. Saksikan presentasi dari startup-startup promising dan bertemu dengan para investor terkemuka.",
+                ticketTypes: [
+                    { name: "Entrepreneur", price: 100000, available: true },
+                    { name: "Investor", price: 200000, available: true }
+                ]
+            },
+            {
+                id: 6,
+                title: "Coffee Festival Yogya",
+                date: "10 Januari 2025",
+                time: "08:00 - 20:00 WIB",
+                location: "Yogyakarta",
+                venue: "Malioboro Street",
+                price: 50000,
+                category: "kuliner",
+                gradient: "from-yellow-400 to-orange-500",
+                capacity: "3,000 orang",
+                description: "Festival kopi dengan berbagai jenis kopi nusantara dan internasional. Workshop barista, cupping session, dan kompetisi latte art.",
+                ticketTypes: [
+                    { name: "Coffee Lover", price: 50000, available: true },
+                    { name: "Barista Workshop", price: 150000, available: true }
+                ]
+            },
+            {
+                id: 7,
+                title: "Basketball Championship",
+                date: "15 Januari 2025",
+                time: "15:00 - 21:00 WIB",
+                location: "Jakarta",
+                venue: "Istora Senayan",
+                price: 120000,
+                category: "olahraga",
+                gradient: "from-orange-400 to-red-500",
+                capacity: "7,000 orang",
+                description: "Pertandingan final championship basket dengan tim-tim terbaik se-Asia Tenggara. Saksikan aksi spektakuler para pemain basket profesional.",
+                ticketTypes: [
+                    { name: "Tribune", price: 120000, available: true },
+                    { name: "VIP", price: 250000, available: true },
+                    { name: "VVIP", price: 500000, available: true }
+                ]
+            },
+            {
+                id: 8,
+                title: "Art Exhibition Modern",
+                date: "20 Januari 2025",
+                time: "10:00 - 18:00 WIB",
+                location: "Bandung",
+                venue: "Museum Seni Modern",
+                price: 80000,
+                category: "seni",
+                gradient: "from-indigo-400 to-purple-500",
+                capacity: "800 orang",
+                description: "Pameran seni modern dengan karya-karya dari seniman kontemporer Indonesia dan mancanegara. Eksplorasi seni visual yang menginspirasi.",
+                ticketTypes: [
+                    { name: "Regular", price: 80000, available: true },
+                    { name: "Art Enthusiast", price: 150000, available: true }
+                ]
+            }
+        ];
+
+        let currentFilter = 'all';
+        let currentFilterPage = 'all';
+        let selectedEvent = null;
+        let selectedTickets = {};
+
+        // Navigation functions
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+            document.getElementById(pageId + '-page').classList.add('fade-in');
+            
+            // Update navigation active state
+            document.querySelectorAll('.nav-link, .nav-link-mobile').forEach(link => {
+                link.classList.remove('active-nav');
+            });
+            
+            // If showing events page, render events
+            if (pageId === 'event') {
+                renderEvents();
+            }
+            
+            // If showing events list page, render events list
+            if (pageId === 'events') {
+                renderEventsList();
+            }
+            
+            // Close mobile menu
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Event functions
+        function renderEvents() {
+            const container = document.getElementById('events-container');
+            const filteredEvents = currentFilter === 'all' ? events : events.filter(event => event.category === currentFilter);
+            
+            container.innerHTML = filteredEvents.map(event => `
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-r ${event.gradient}"></div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">${event.title}</h3>
+                        <p class="text-gray-600 mb-4">${event.date} • ${event.location}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-pink-600">Rp ${event.price.toLocaleString('id-ID')}</span>
+                            <button onclick="openTicketModal(${event.id})" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors">
+                                Beli Tiket
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterEvents(category) {
+            currentFilter = category;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-pink-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-pink-600', 'text-white');
+            
+            renderEvents();
+        }
+
+        // Modal functions
+        function openTicketModal(eventId) {
+            selectedEvent = events.find(event => event.id === eventId);
+            document.getElementById('modal-event-title').textContent = selectedEvent.title;
+            document.getElementById('modal-event-date').textContent = selectedEvent.date + ' • ' + selectedEvent.location;
+            updateTotalPrice();
+            document.getElementById('ticket-modal').classList.remove('hidden');
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticket-modal').classList.add('hidden');
+            selectedEvent = null;
+        }
+
+        function updateTotalPrice() {
+            if (!selectedEvent) return;
+            
+            const quantity = parseInt(document.getElementById('ticket-quantity').value);
+            const total = selectedEvent.price * quantity;
+            document.getElementById('total-price').textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        // Events List Functions
+        function renderEventsList() {
+            const container = document.getElementById('events-list-container');
+            const filteredEvents = currentFilterPage === 'all' ? events : events.filter(event => event.category === currentFilterPage);
+            
+            container.innerHTML = filteredEvents.map(event => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="md:flex">
+                        <div class="md:w-1/3">
+                            <div class="h-48 md:h-full bg-gradient-to-r ${event.gradient}"></div>
+                        </div>
+                        <div class="md:w-2/3 p-6">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">${event.title}</h3>
+                                    <div class="flex items-center text-gray-600 mb-2">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        ${event.date} • ${event.time}
+                                    </div>
+                                    <div class="flex items-center text-gray-600 mb-4">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        ${event.venue}, ${event.location}
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-500 mb-1">Mulai dari</div>
+                                    <div class="text-2xl font-bold text-pink-600">Rp ${event.price.toLocaleString('id-ID')}</div>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4 line-clamp-2">${event.description}</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <button onclick="showEventDetail(${event.id})" class="flex-1 bg-pink-600 text-white px-6 py-2 rounded-lg hover:bg-pink-700 transition-colors font-medium">
+                                    Lihat Detail
+                                </button>
+                                <button onclick="openTicketModal(${event.id})" class="flex-1 bg-white border-2 border-pink-600 text-pink-600 px-6 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium">
+                                    Beli Tiket Cepat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterEventsPage(category) {
+            currentFilterPage = category;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn-page').forEach(btn => {
+                btn.classList.remove('bg-pink-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-pink-600', 'text-white');
+            
+            renderEventsList();
+        }
+
+        function searchEvents() {
+            const searchTerm = document.getElementById('search-events').value.toLowerCase();
+            const container = document.getElementById('events-list-container');
+            let filteredEvents = currentFilterPage === 'all' ? events : events.filter(event => event.category === currentFilterPage);
+            
+            if (searchTerm) {
+                filteredEvents = filteredEvents.filter(event => 
+                    event.title.toLowerCase().includes(searchTerm) ||
+                    event.location.toLowerCase().includes(searchTerm) ||
+                    event.venue.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            container.innerHTML = filteredEvents.map(event => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="md:flex">
+                        <div class="md:w-1/3">
+                            <div class="h-48 md:h-full bg-gradient-to-r ${event.gradient}"></div>
+                        </div>
+                        <div class="md:w-2/3 p-6">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 mb-2">${event.title}</h3>
+                                    <div class="flex items-center text-gray-600 mb-2">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        ${event.date} • ${event.time}
+                                    </div>
+                                    <div class="flex items-center text-gray-600 mb-4">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        ${event.venue}, ${event.location}
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-500 mb-1">Mulai dari</div>
+                                    <div class="text-2xl font-bold text-pink-600">Rp ${event.price.toLocaleString('id-ID')}</div>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4 line-clamp-2">${event.description}</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <button onclick="showEventDetail(${event.id})" class="flex-1 bg-pink-600 text-white px-6 py-2 rounded-lg hover:bg-pink-700 transition-colors font-medium">
+                                    Lihat Detail
+                                </button>
+                                <button onclick="openTicketModal(${event.id})" class="flex-1 bg-white border-2 border-pink-600 text-pink-600 px-6 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium">
+                                    Beli Tiket Cepat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event Detail Functions
+        function showEventDetail(eventId) {
+            selectedEvent = events.find(event => event.id === eventId);
+            selectedTickets = {};
+            
+            // Populate event details
+            document.getElementById('detail-event-title').textContent = selectedEvent.title;
+            document.getElementById('detail-event-date').textContent = selectedEvent.date + ' • ' + selectedEvent.location;
+            document.getElementById('detail-datetime').textContent = selectedEvent.date + ' • ' + selectedEvent.time;
+            document.getElementById('detail-location').textContent = selectedEvent.venue + ', ' + selectedEvent.location;
+            document.getElementById('detail-capacity').textContent = selectedEvent.capacity;
+            document.getElementById('detail-category').textContent = selectedEvent.category.charAt(0).toUpperCase() + selectedEvent.category.slice(1);
+            document.getElementById('detail-event-description').innerHTML = `<p>${selectedEvent.description}</p>`;
+            
+            // Update header gradient
+            document.getElementById('event-detail-header').className = `h-64 bg-gradient-to-r ${selectedEvent.gradient} relative`;
+            
+            // Populate ticket types
+            const ticketContainer = document.getElementById('ticket-types-container');
+            ticketContainer.innerHTML = selectedEvent.ticketTypes.map(ticket => `
+                <div class="border border-gray-200 rounded-lg p-4 ${ticket.available ? 'hover:border-pink-300' : 'opacity-50'}">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-semibold text-gray-800">${ticket.name}</h4>
+                        <span class="text-lg font-bold text-pink-600">Rp ${ticket.price.toLocaleString('id-ID')}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">${ticket.available ? 'Tersedia' : 'Sold Out'}</span>
+                        ${ticket.available ? `
+                            <div class="flex items-center space-x-2">
+                                <button onclick="updateTicketQuantity('${ticket.name}', -1)" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300">-</button>
+                                <span class="w-8 text-center" id="qty-${ticket.name}">0</span>
+                                <button onclick="updateTicketQuantity('${ticket.name}', 1)" class="w-8 h-8 bg-pink-600 text-white rounded-full flex items-center justify-center hover:bg-pink-700">+</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            updateDetailTotalPrice();
+            document.getElementById('event-detail-modal').classList.remove('hidden');
+        }
+
+        function closeEventDetail() {
+            document.getElementById('event-detail-modal').classList.add('hidden');
+            selectedEvent = null;
+            selectedTickets = {};
+        }
+
+        function updateTicketQuantity(ticketName, change) {
+            if (!selectedTickets[ticketName]) {
+                selectedTickets[ticketName] = 0;
+            }
+            
+            selectedTickets[ticketName] = Math.max(0, selectedTickets[ticketName] + change);
+            document.getElementById(`qty-${ticketName}`).textContent = selectedTickets[ticketName];
+            
+            updateDetailTotalPrice();
+        }
+
+        function updateDetailTotalPrice() {
+            let total = 0;
+            let hasTickets = false;
+            
+            for (const [ticketName, quantity] of Object.entries(selectedTickets)) {
+                if (quantity > 0) {
+                    hasTickets = true;
+                    const ticket = selectedEvent.ticketTypes.find(t => t.name === ticketName);
+                    total += ticket.price * quantity;
+                }
+            }
+            
+            document.getElementById('detail-total-price').textContent = 'Rp ' + total.toLocaleString('id-ID');
+            
+            const purchaseBtn = document.getElementById('purchase-btn');
+            if (hasTickets) {
+                purchaseBtn.disabled = false;
+                purchaseBtn.textContent = 'Beli Sekarang';
+                purchaseBtn.classList.remove('opacity-50');
+            } else {
+                purchaseBtn.disabled = true;
+                purchaseBtn.textContent = 'Pilih Tiket Terlebih Dahulu';
+                purchaseBtn.classList.add('opacity-50');
+            }
+        }
+
+        function proceedToPurchase() {
+            let ticketSummary = '';
+            let total = 0;
+            
+            for (const [ticketName, quantity] of Object.entries(selectedTickets)) {
+                if (quantity > 0) {
+                    const ticket = selectedEvent.ticketTypes.find(t => t.name === ticketName);
+                    ticketSummary += `${quantity}x ${ticketName} (Rp ${ticket.price.toLocaleString('id-ID')})\\n`;
+                    total += ticket.price * quantity;
+                }
+            }
+            
+            alert(`Pembelian berhasil!\\n\\nEvent: ${selectedEvent.title}\\nTiket:\\n${ticketSummary}\\nTotal: Rp ${total.toLocaleString('id-ID')}`);
+            closeEventDetail();
+        }
+
+        // Event handlers
+        function handleLogin(event) {
+            event.preventDefault();
+            alert('Login berhasil! Selamat datang di EventTix.');
+            showPage('home');
+        }
+
+        function handleTicketPurchase(event) {
+            event.preventDefault();
+            const quantity = document.getElementById('ticket-quantity').value;
+            alert(`Pembelian berhasil! Anda telah membeli ${quantity} tiket untuk ${selectedEvent.title}.`);
+            closeTicketModal();
+        }
+
+        // Event listeners
+        document.getElementById('ticket-quantity').addEventListener('change', updateTotalPrice);
+        document.getElementById('search-events').addEventListener('input', searchEvents);
+
+        // Close modal when clicking outside
+        document.getElementById('ticket-modal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeTicketModal();
+            }
+        });
+
+        document.getElementById('event-detail-modal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeEventDetail();
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('home');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'986a6dcc53d0d899',t:'MTc1OTEzNzg4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
