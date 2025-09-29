@@ -27,7 +27,7 @@
                 @foreach($events as $event)
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
                         <a href="{{ route('events.show', $event) }}" class="block">
-                            <img class="h-56 w-full object-cover" src="{{ $event->getFirstMediaUrl('event_posters') }}" alt="Poster {{ $event->title }}">
+                            <img class="h-90 w-full object-cover" src="{{ $event->getFirstMediaUrl('event_posters') }}" alt="Poster {{ $event->title }}">
                             <div class="p-6">
                                 <p class="text-sm text-blue-500 font-semibold">{{ $event->start_date->format('d M Y') }}</p>
                                 <h2 class="text-2xl font-bold mt-2 text-gray-800 truncate">{{ $event->title }}</h2>

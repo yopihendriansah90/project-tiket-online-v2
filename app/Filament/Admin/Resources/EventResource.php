@@ -109,6 +109,13 @@ class EventResource extends Resource
         ];
     }
 
+    protected static function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['user_id'] = auth()->id();
+    
+        return $data;
+    }
+
     public static function getPages(): array
     {
         return [
