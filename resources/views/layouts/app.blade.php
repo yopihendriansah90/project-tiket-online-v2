@@ -15,6 +15,7 @@
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="font-sans antialiased bg-gray-50 text-gray-800">
     
@@ -53,5 +54,6 @@
         </footer>
     </div>
 
+    @livewireScripts
 </body>
 </html>

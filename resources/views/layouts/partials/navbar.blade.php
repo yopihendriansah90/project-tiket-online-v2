@@ -9,6 +9,7 @@
 
             <!-- Desktop Menu -->
             <div class="hidden sm:flex sm:items-center sm:space-x-8">
+                <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-900 font-medium">Home</a>
                 <a href="{{ route('events.index') }}" class="text-gray-500 hover:text-gray-900 font-medium">Events</a>
                 <a href="#" class="text-gray-500 hover:text-gray-900 font-medium">Kategori</a>
                 <a href="{{ route('contact') }}" class="text-gray-500 hover:text-gray-900 font-medium">Hubungi Kami</a>
@@ -17,7 +18,7 @@
 
             <!-- Desktop CTA -->
             <div class="hidden sm:flex sm:items-center">
-                <a href="#" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Login</a>
+                <a href="{{ route('filament.admin.auth.login') }}" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Login</a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -35,6 +36,7 @@
     <!-- Mobile Menu -->
     <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <a href="{{ route('home') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">Home</a>
             <a href="{{ route('events.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-indigo-500 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition duration-150 ease-in-out">Events</a>
             <a href="#" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">Kategori</a>
             <a href="{{ route('contact') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">Hubungi Kami</a>
@@ -42,7 +44,7 @@
         </div>
         <div class="pt-4 pb-3 border-t border-gray-200">
             <div class="flex items-center px-4">
-                <a href="#" class="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Login</a>
+                <a href="{{ route('filament.admin.auth.login') }}" class="w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Login</a>
             </div>
         </div>
     </div>
