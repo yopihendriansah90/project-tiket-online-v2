@@ -18,4 +18,9 @@ class EditEvent extends EditRecord
             Actions\RestoreAction::make(),
         ];
     }
+    // redirect to index
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

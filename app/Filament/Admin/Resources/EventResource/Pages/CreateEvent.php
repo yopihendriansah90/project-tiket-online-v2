@@ -16,4 +16,12 @@ class CreateEvent extends CreateRecord
  
         return $data;
     }
+
+    // redirect to index
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+
 }

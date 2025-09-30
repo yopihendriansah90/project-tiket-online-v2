@@ -14,16 +14,16 @@ class Ticket extends Model
         'name',
         'price',
         'quantity',
-        'sale_start_date',
-        'sale_end_date',
+        'available_from',
+        'available_to',
         'is_seated',
     ];
 
     protected $casts = [
         'price' => 'integer',
         'is_seated' => 'boolean',
-        'sale_start_date' => 'datetime',
-        'sale_end_date' => 'datetime',
+        'available_from' => 'datetime',
+        'available_to' => 'datetime',
     ];
 
     // Relasi

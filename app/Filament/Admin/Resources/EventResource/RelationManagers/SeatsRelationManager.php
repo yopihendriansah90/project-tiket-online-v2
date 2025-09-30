@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Unique;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class SeatsRelationManager extends RelationManager
 {
@@ -37,7 +38,11 @@ class SeatsRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Select::make('ticket_id')
                     ->label('Jenis Tiket')
-                    ->relationship('ticket', 'name')
+                    ->relationship(
+                        name: 'ticket',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->where('event_id', $this->ownerRecord->id)
+                    )
                     ->required(),
                 Forms\Components\TextInput::make('area')
                     ->label('Area / Zona Kursi')
