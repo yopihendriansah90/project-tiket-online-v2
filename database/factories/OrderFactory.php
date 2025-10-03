@@ -17,6 +17,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => \App\Models\User::factory(),
             'invoice_number' => 'INV-' . now()->timestamp . $this->faker->unique()->randomNumber(4),
             'total_price' => 0, // Will be updated after items are added
             'status' => 'pending',

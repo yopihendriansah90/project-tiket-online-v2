@@ -18,6 +18,11 @@ class Event extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, HasSlug, SoftDeletes;
 
     /**
+     * Properti yang tidak bisa diisi secara massal (guard)
+     */
+    protected $guarded = ['id'];
+
+    /**
      * Properti yang bisa diisi secara massal.
      * Disesuaikan dengan migrasi.
      */
@@ -88,5 +93,50 @@ class Event extends Model implements HasMedia
     public function seats(): HasMany
     {
         return $this->hasMany(Seat::class);
+    }
+
+    // --- VALIDATION RULES --- //
+    
+    /**
+     * Validation rules for Event
+     */
+    public static function validationRules(): array
+    {
+        return [
+            'title' => 'required|string|max:255|min:3',
+            'description' => 'required|string|min:10',
+            'location' => 'required|string|max:255',
+            'start_date' => 'required|date|after:now',
+            'end_date' => 'required|date|after:start_date',
+            'status' => 'required|in:draft,published,completed,cancelled',
+            'is_online' => 'boolean',
+            'has_numbered_seats' => 'boolean',
+        ];
+    }
+
+    // --- SCOPES --- //
+    
+    /**
+     * Scope untuk event yang published
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('status', EventStatus::PUBLISHED);
+    }
+
+    /**
+     * Scope untuk event yang aktif (belum selesai)
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('end_date', '>', now());
+    }
+
+    /**
+     * Scope untuk event milik user tertentu
+     */
+    public function scopeByUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
     }
 }

@@ -17,6 +17,7 @@ class EventFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => \App\Models\User::factory(),
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph,
             'location' => $this->faker->city . ', ' . $this->faker->country,

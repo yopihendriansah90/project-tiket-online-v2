@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 // Import yang benar untuk Filament v3
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -53,15 +54,39 @@ class EventResource extends Resource
                 Forms\Components\Section::make('Waktu dan Lokasi')
                     ->schema([
                         Forms\Components\DateTimePicker::make('start_date')
-                            ->required(),
-                        Forms\Components\DateTimePicker::make('end_date')
-                            ->required(),
-                        Forms\Components\TextInput::make('location')
+                            ->label('Tanggal Mulai')
                             ->required()
-                            ->maxLength(255),
+                            ->minDate(now())
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                // Clear end_date if start_date is changed to avoid conflicts
+                                if ($state) {
+                                    $set('end_date', null);
+                                }
+                            }),
+                        Forms\Components\DateTimePicker::make('end_date')
+                            ->label('Tanggal Selesai')
+                            ->required()
+                            ->minDate(fn ($get) => $get('start_date') ?: now())
+                            ->afterOrEqual('start_date')
+                            ->live(),
+                        Forms\Components\TextInput::make('location')
+                            ->label('Lokasi')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Alamat venue atau link online'),
+                        Forms\Components\Toggle::make('is_online')
+                            ->label('Event Online?')
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                if ($state) {
+                                    $set('location', ''); // Clear location for online events
+                                }
+                            }),
                         Forms\Components\Toggle::make('has_numbered_seats')
                             ->label('Memiliki Kursi Bernomor?')
-                            ->required(),
+                            ->reactive()
+                            ->helperText('Aktifkan jika event memiliki sistem kursi bernomor'),
                     ])->columns(2),
             ]);
     }
@@ -111,7 +136,7 @@ class EventResource extends Resource
 
     protected static function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['user_id'] = auth()->id();
+        $data['user_id'] = Auth::id() ?? 1; // Fallback to user ID 1 if not authenticated
     
         return $data;
     }

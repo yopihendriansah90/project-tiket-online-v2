@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .hero-section-dark {
+        position: relative;
+        background-image: url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-section-dark::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(17, 24, 39, 0.8) 0%, rgba(17, 24, 39, 0.4) 50%, rgba(17, 24, 39, 0.8) 100%);
+        z-index: 1;
+    }
+}
