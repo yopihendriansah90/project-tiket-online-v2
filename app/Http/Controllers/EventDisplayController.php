@@ -101,6 +101,9 @@ class EventDisplayController extends Controller
             $ticketStock[$ticket->id] = $ticket->available_stock;
         }
 
-        return view('events.show', compact('event', 'ticketStock'));
+        return view('events.show', [
+            'event' => $eventData,
+            'ticketStock' => $ticketStock,
+        ]);
     }
 }

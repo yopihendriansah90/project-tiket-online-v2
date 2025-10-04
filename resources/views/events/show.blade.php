@@ -21,12 +21,16 @@ $title = $event->title . ' - TiketIn';
             <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
                 <div class="lg:grid lg:grid-cols-5 lg:gap-0">
                     <!-- Enhanced Poster Section -->
-                    <div class="lg:col-span-2 relative">
-                        <div class="sticky top-24">
-                            <div class="relative aspect-[4/5] lg:min-h-[600px]">
+                    <div class="lg:col-span-2 relative p-6 lg:p-12">
+                        <div class="mx-auto max-w-[520px] w-full">
+                            <div class="mx-auto max-w-[480px]">
+                                <div class="relative aspect-[4/5] lg:min-h-[600px] rounded-2xl overflow-hidden ring-1 ring-purple-100 shadow-xl">
                                 <img class="w-full h-full object-cover"
                                      src="{{ $event->getFirstMediaUrl('event_posters') ?: 'https://via.placeholder.com/400x500/6366f1/ffffff?text=🎭+' . urlencode($event->title) }}"
                                      alt="Poster {{ $event->title }}">
+
+                                <!-- Gradient overlay -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent pointer-events-none"></div>
                                 
                                 <!-- Status Badges -->
                                 <div class="absolute top-6 left-6 space-y-2">
@@ -45,11 +49,12 @@ $title = $event->title . ' - TiketIn';
                                 
                                 <!-- Share Button -->
                                 <div class="absolute top-6 right-6">
-                                    <button class="bg-white/90 backdrop-blur-sm text-purple-600 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300">
+                                    <button data-share class="bg-white/90 backdrop-blur-sm text-purple-600 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300">
                                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
                                         </svg>
                                     </button>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -205,8 +210,66 @@ $title = $event->title . ' - TiketIn';
                             </div>
 
                             <!-- Ticket Selection Component -->
-                            <div class="mb-8">
-                                {{-- @livewire('ticket-selector', ['event' => $event]) --}}
+                            <div id="beli-tiket" class="mb-8">
+                                @if(session('success'))
+                                    <div class="mb-4 rounded-xl border border-green-200 bg-green-50 text-green-800 px-4 py-3 text-sm">
+                                        ✅ {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if($errors->any())
+                                    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm">
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            @foreach($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                <div class="bg-white/80 backdrop-blur border border-purple-100 rounded-2xl shadow-xl overflow-hidden">
+                                    <div class="p-6 sm:p-8">
+                                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                                            <span class="mr-2">🎟️</span>
+                                            Beli Tiket
+                                        </h3>
+
+                                        <form method="POST" action="{{ route('orders.store') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-end">
+                                            @csrf
+                                            <input type="hidden" name="event_id" value="{{ $event->id }}">
+
+                                            <div>
+                                                <label for="ticket_id" class="block text-sm font-medium text-gray-700 mb-1">Jenis Tiket</label>
+                                                <select id="ticket_id" name="ticket_id" required class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                                    @forelse($event->tickets as $ticket)
+                                                        @php $stock = $ticketStock[$ticket->id] ?? $ticket->available_stock; @endphp
+                                                        <option value="{{ $ticket->id }}" data-price="{{ $ticket->price }}" data-stock="{{ $stock }}" {{ $stock <= 0 ? 'disabled' : '' }}>
+                                                            {{ $ticket->name }} — Rp {{ number_format($ticket->price, 0, ',', '.') }} {{ $stock <= 0 ? '(Habis)' : '' }}
+                                                        </option>
+                                                    @empty
+                                                        <option disabled>Belum ada tiket tersedia</option>
+                                                    @endforelse
+                                                </select>
+                                                <p class="text-xs text-gray-500 mt-1">
+                                                    Harga: <span id="priceDisplay">-</span>
+                                                    · Stok: <span id="stockDisplay">-</span>
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Jumlah</label>
+                                                <input type="number" id="quantity" name="quantity" min="1" value="1" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                                <p class="text-xs text-gray-500 mt-1">Subtotal: <span id="subtotalDisplay">-</span></p>
+                                            </div>
+
+                                            <div>
+                                                <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition">
+                                                    🛒 Beli Tiket
+                                                </button>
+                                                <p class="text-[11px] text-gray-500 mt-2">Pembayaran dilakukan nanti. Order akan berstatus "pending".</p>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Event Organizer Info -->
@@ -317,6 +380,58 @@ $title = $event->title . ' - TiketIn';
                 });
             }
         });
+
+        // Ticket form dynamic pricing and stock
+        const ticketSelect = document.getElementById('ticket_id');
+        const quantityInput = document.getElementById('quantity');
+        const priceDisplay = document.getElementById('priceDisplay');
+        const stockDisplay = document.getElementById('stockDisplay');
+        const subtotalDisplay = document.getElementById('subtotalDisplay');
+
+        function formatRupiah(number) {
+            try {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+            } catch (e) {
+                return 'Rp ' + (number || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+        }
+
+        function updateUI() {
+            if (!ticketSelect) return;
+            const opt = ticketSelect.selectedOptions[0];
+            if (!opt) return;
+
+            const price = parseInt(opt.dataset.price || '0', 10);
+            const stock = parseInt(opt.dataset.stock || '0', 10);
+
+            // Update max quantity based on stock
+            if (quantityInput) {
+                const min = 1;
+                const max = Math.max(1, stock);
+                quantityInput.min = String(min);
+                quantityInput.max = String(max);
+                const current = parseInt(quantityInput.value || '1', 10);
+                if (current > max) {
+                    quantityInput.value = String(max);
+                } else if (current < min) {
+                    quantityInput.value = String(min);
+                }
+            }
+
+            // Update displays
+            if (priceDisplay) priceDisplay.textContent = formatRupiah(price);
+            if (stockDisplay) stockDisplay.textContent = stock > 0 ? stock + ' tersedia' : 'Habis';
+            if (subtotalDisplay && quantityInput) {
+                const qty = parseInt(quantityInput.value || '1', 10);
+                subtotalDisplay.textContent = formatRupiah(price * qty);
+            }
+        }
+
+        ticketSelect?.addEventListener('change', updateUI);
+        quantityInput?.addEventListener('input', updateUI);
+
+        // Initialize on load
+        updateUI();
     });
     </script>
     @endpush

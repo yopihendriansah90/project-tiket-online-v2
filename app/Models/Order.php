@@ -51,6 +51,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(\App\Models\Payment::class);
+    }
+
     // --- SCOPES --- //
     
     public function scopePaid($query)
