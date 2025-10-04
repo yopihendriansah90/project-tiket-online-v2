@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ETicketController;
 use Illuminate\Support\Facades\Route;
 
 // Route untuk homepage
@@ -25,9 +27,9 @@ Route::post('/orders', [OrderController::class, 'store'])
 Route::view('/about', 'pages.about')->name('about');
 Route::view('/contact', 'pages.contact')->name('contact');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -35,10 +37,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
- // Route pembayaran manual: halaman upload bukti transfer
+ // Route pembayaran manual: halaman upload bukti transfer + halaman status submitted
  Route::middleware('auth')->group(function () {
      Route::get('/payments/{order}/create', [PaymentController::class, 'create'])->name('payments.create');
      Route::post('/payments/{order}', [PaymentController::class, 'store'])->name('payments.store');
+     Route::get('/payments/{order}/submitted', [PaymentController::class, 'submitted'])->name('payments.submitted');
+
+     // Admin verify payment from preview modal
+     Route::post('/admin/payments/{payment}/verify', [PaymentController::class, 'adminVerify'])->name('payments.admin.verify');
+ });
+ 
+ Route::middleware(['auth', 'verified'])->group(function () {
+     // ETicket Show (akses oleh user pemilik order item, status harus paid)
+     Route::get('/etickets/{orderItem}', [ETicketController::class, 'show'])->name('etickets.show');
+
+     // Deep-link ke dashboard dengan tab tertentu via redirect agar data tetap dari controller
+     Route::get('/account/orders', fn () => redirect()->route('dashboard', ['tab' => 'orders']))->name('user.orders');
+     Route::get('/account/tickets', fn () => redirect()->route('dashboard', ['tab' => 'tickets']))->name('user.tickets');
+     Route::get('/account/payments', fn () => redirect()->route('dashboard', ['tab' => 'payments']))->name('user.payments');
+     Route::get('/account/notifications', fn () => redirect()->route('dashboard', ['tab' => 'notifications']))->name('user.notifications');
+     Route::get('/account/favorites', fn () => redirect()->route('dashboard', ['tab' => 'favorites']))->name('user.favorites');
  });
  
  require __DIR__.'/auth.php';

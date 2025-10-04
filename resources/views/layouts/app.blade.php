@@ -13,8 +13,14 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body class="font-sans antialiased">
+        <!-- Skip to content for keyboard users -->
+        <a href="#main-content"
+           class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white text-purple-700 px-3 py-2 rounded-md shadow">
+            Lewati ke konten utama
+        </a>
         <div class="min-h-screen bg-gray-100">
             @include('layouts.partials.navbar')
 
@@ -28,12 +34,13 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main id="main-content" role="main" tabindex="-1">
                 {{ $slot }}
             </main>
 
             @include('layouts.partials.footer')
         </div>
+            @livewireScripts
             @stack('scripts')
     </body>
 </html>

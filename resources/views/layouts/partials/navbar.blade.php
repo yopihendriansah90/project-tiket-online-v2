@@ -76,9 +76,21 @@
                                 <span class="mr-3">📊</span>
                                 <span>Dashboard</span>
                             </a>
-                            <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200">
+                            <a href="{{ route('user.orders') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200">
+                                <span class="mr-3">🧾</span>
+                                <span>Pesanan</span>
+                            </a>
+                            <a href="{{ route('user.tickets') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200">
                                 <span class="mr-3">🎟️</span>
                                 <span>Tiket Saya</span>
+                            </a>
+                            <a href="{{ route('user.payments') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200">
+                                <span class="mr-3">💳</span>
+                                <span>Pembayaran</span>
+                            </a>
+                            <a href="{{ route('user.notifications') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200">
+                                <span class="mr-3">🔔</span>
+                                <span>Notifikasi</span>
                             </a>
                             <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200">
                                 <span class="mr-3">⚙️</span>
@@ -164,9 +176,21 @@
                             <span>📊</span>
                             <span class="font-medium">Dashboard</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-300">
+                        <a href="{{ route('user.orders') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-300">
+                            <span>🧾</span>
+                            <span class="font-medium">Pesanan</span>
+                        </a>
+                        <a href="{{ route('user.tickets') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-300">
                             <span>🎟️</span>
                             <span class="font-medium">Tiket Saya</span>
+                        </a>
+                        <a href="{{ route('user.payments') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-300">
+                            <span>💳</span>
+                            <span class="font-medium">Pembayaran</span>
+                        </a>
+                        <a href="{{ route('user.notifications') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-300">
+                            <span>🔔</span>
+                            <span class="font-medium">Notifikasi</span>
                         </a>
                         <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-300">
                             <span>⚙️</span>

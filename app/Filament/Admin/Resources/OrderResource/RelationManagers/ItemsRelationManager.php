@@ -31,6 +31,10 @@ class ItemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('ticket_name')
                     ->label('Nama Tiket'),
 
+                Tables\Columns\TextColumn::make('ticket.event.title')
+                    ->label('Event')
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('price')
                     ->label('Harga Satuan')
                     ->money('idr'),

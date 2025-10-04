@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class Payment extends Model implements \Spatie\MediaLibrary\HasMedia
 {
-    use HasFactory;
+    use HasFactory, \Spatie\MediaLibrary\InteractsWithMedia;
 
     protected $fillable = [
         'order_id',
@@ -68,5 +68,19 @@ class Payment extends Model
             'shopeepay' => 'ShopeePay',
             default => ucfirst($this->channel),
         };
+    }
+
+    // Spatie Media Library collections
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('payment_proofs')
+            ->singleFile();
+    }
+
+    // Convenient accessor to get proof URL
+    public function getProofUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('payment_proofs');
+        return $media ? $media->getUrl() : null;
     }
 }
