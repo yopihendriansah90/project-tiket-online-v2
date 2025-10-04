@@ -209,67 +209,9 @@ $title = $event->title . ' - TiketIn';
                                 </div>
                             </div>
 
-                            <!-- Ticket Selection Component -->
+                            <!-- Ticket Selection Component (Livewire Multi-step) -->
                             <div id="beli-tiket" class="mb-8">
-                                @if(session('success'))
-                                    <div class="mb-4 rounded-xl border border-green-200 bg-green-50 text-green-800 px-4 py-3 text-sm">
-                                        ✅ {{ session('success') }}
-                                    </div>
-                                @endif
-                                @if($errors->any())
-                                    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm">
-                                        <ul class="list-disc pl-5 space-y-1">
-                                            @foreach($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-
-                                <div class="bg-white/80 backdrop-blur border border-purple-100 rounded-2xl shadow-xl overflow-hidden">
-                                    <div class="p-6 sm:p-8">
-                                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                                            <span class="mr-2">🎟️</span>
-                                            Beli Tiket
-                                        </h3>
-
-                                        <form method="POST" action="{{ route('orders.store') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-end">
-                                            @csrf
-                                            <input type="hidden" name="event_id" value="{{ $event->id }}">
-
-                                            <div>
-                                                <label for="ticket_id" class="block text-sm font-medium text-gray-700 mb-1">Jenis Tiket</label>
-                                                <select id="ticket_id" name="ticket_id" required class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-                                                    @forelse($event->tickets as $ticket)
-                                                        @php $stock = $ticketStock[$ticket->id] ?? $ticket->available_stock; @endphp
-                                                        <option value="{{ $ticket->id }}" data-price="{{ $ticket->price }}" data-stock="{{ $stock }}" {{ $stock <= 0 ? 'disabled' : '' }}>
-                                                            {{ $ticket->name }} — Rp {{ number_format($ticket->price, 0, ',', '.') }} {{ $stock <= 0 ? '(Habis)' : '' }}
-                                                        </option>
-                                                    @empty
-                                                        <option disabled>Belum ada tiket tersedia</option>
-                                                    @endforelse
-                                                </select>
-                                                <p class="text-xs text-gray-500 mt-1">
-                                                    Harga: <span id="priceDisplay">-</span>
-                                                    · Stok: <span id="stockDisplay">-</span>
-                                                </p>
-                                            </div>
-
-                                            <div>
-                                                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Jumlah</label>
-                                                <input type="number" id="quantity" name="quantity" min="1" value="1" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-                                                <p class="text-xs text-gray-500 mt-1">Subtotal: <span id="subtotalDisplay">-</span></p>
-                                            </div>
-
-                                            <div>
-                                                <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition">
-                                                    🛒 Beli Tiket
-                                                </button>
-                                                <p class="text-[11px] text-gray-500 mt-2">Pembayaran dilakukan nanti. Order akan berstatus "pending".</p>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                                <livewire:ticket-selector :event="$event" />
                             </div>
 
                             <!-- Event Organizer Info -->

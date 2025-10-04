@@ -68,7 +68,7 @@
                 <ul class="mt-1 text-sm text-gray-700 space-y-1">
                   @foreach($attendees as $a)
                   <li class="flex justify-between">
-                    <span>{{ $a->name }} ({{ $a->email }})</span>
+                    <span>{{ $a->name }} — {{ $a->phone ?? '-' }}</span>
                     <span class="font-medium">{{ $a->seat_display }}</span>
                   </li>
                   @endforeach
@@ -78,11 +78,23 @@
                 @endif
               </div>
             </div>
-            <div class="flex flex-col items-center justify-center">
-              <div class="rounded-lg ring-1 ring-gray-200 p-4">
-                <img src="{{ $qrUrl }}" alt="QR E-ticket" class="w-60 h-60 object-contain" />
-              </div>
-              <p class="mt-2 text-xs text-gray-500">Data QR: <span class="font-mono break-all">{{ $qrData }}</span></p>
+            <div class="flex flex-col items-center justify-center w-full">
+              @if(isset($attendeeQRCodes) && $attendeeQRCodes->count() > 0)
+                <div class="grid grid-cols-1 gap-4 w-full">
+                  @foreach($attendeeQRCodes as $ac)
+                    <div class="rounded-lg ring-1 ring-gray-200 p-4 flex flex-col items-center">
+                      <img src="{{ $ac['qrUrl'] }}" alt="QR {{ $ac['name'] }}" class="w-48 h-48 object-contain" />
+                      <div class="mt-2 text-sm text-gray-800 font-semibold">{{ $ac['name'] }}</div>
+                      <div class="text-xs text-gray-600">{{ $ac['phone'] ?? '-' }}</div>
+                    </div>
+                  @endforeach
+                </div>
+              @else
+                <div class="rounded-lg ring-1 ring-gray-200 p-4">
+                  <img src="{{ $qrUrl }}" alt="QR E-ticket" class="w-60 h-60 object-contain" />
+                </div>
+                <p class="mt-2 text-xs text-gray-500">Data QR: <span class="font-mono break-all">{{ $qrData }}</span></p>
+              @endif
               <p class="mt-1 text-xs text-gray-500">Jangan bagikan QR kepada orang lain.</p>
             </div>
           </div>

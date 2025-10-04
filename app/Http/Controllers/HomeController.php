@@ -14,8 +14,8 @@ class HomeController extends Controller
     {
         // Cache untuk performa homepage
         $cacheKey = 'homepage_events_v2';
-        
-        [$latestEvents, $popularEvents, $stats] = \Cache::remember($cacheKey, 300, function () {
+
+        [$latestEvents, $popularEvents, $stats] = \Illuminate\Support\Facades\Cache::remember($cacheKey, 300, function () {
             // Ambil event terbaru dengan eager loading
             $latestEvents = Event::with(['tickets:id,event_id,name,price', 'media', 'user:id,name'])
                 ->published()

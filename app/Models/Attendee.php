@@ -16,9 +16,11 @@ class Attendee extends Model
         'user_id',
         'name',
         'email',
+        'phone',
         'unique_token',
         'seat_id',
         'checked_in_at',
+        'checkin_gate',
     ];
 
     protected $casts = [
@@ -33,10 +35,12 @@ class Attendee extends Model
             'order_item_id' => 'required|exists:order_items,id',
             'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255|min:2',
-            'email' => 'required|email|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'required|string|max:20',
             'unique_token' => 'required|string|unique:attendees,unique_token|max:100',
             'seat_id' => 'nullable|exists:seats,id',
             'checked_in_at' => 'nullable|date',
+            'checkin_gate' => 'nullable|string|max:50',
         ];
     }
 

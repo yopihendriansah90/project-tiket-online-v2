@@ -1,3 +1,4 @@
+@if($step === 'select')
 <div x-data="{ showSuccessAnimation: false }" class="space-y-6">
     <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         <div class="text-center mb-8">
@@ -29,12 +30,12 @@
             <div class="space-y-6">
                 @foreach($tickets as $ticket)
                     @php
-                        $availableStock = isset($availableStock[$ticket->id]) ? $availableStock[$ticket->id] : $ticket->quantity;
-                        $isLowStock = $availableStock <= 10;
+                        $stockAvailableLocal = isset($availableStock[$ticket->id]) ? $availableStock[$ticket->id] : $ticket->quantity;
+                        $isLowStock = $stockAvailableLocal <= 10;
                         $isSelected = $quantities[$ticket->id] > 0;
                     @endphp
                     
-                    <div class="border-2 rounded-2xl p-6 transition-all duration-300 {{ $isSelected ? 'border-purple-500 bg-purple-50 shadow-lg transform scale-105' : 'border-gray-200 hover:border-purple-300 hover:shadow-md' }}">
+                    <div class="border-2 rounded-2xl p-6 transition-all duration-300 {{ $isSelected ? 'border-purple-500 bg-purple-50 shadow-lg transform scale-105' : 'border-gray-200 hover:border-purple-300 hover:shadow-md' }}" wire:key="ticket-{{ $ticket->id }}">
                         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                             <div class="flex-1">
                                 <!-- Ticket Name with Badges -->
@@ -76,21 +77,21 @@
                                             <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"/>
                                             </svg>
-                                            Hanya {{ $availableStock }} tiket tersisa!
+                                            Hanya {{ $stockAvailableLocal }} tiket tersisa!
                                         </span>
-                                    @elseif($availableStock <= 50)
+                                    @elseif($stockAvailableLocal <= 50)
                                         <span class="flex items-center text-orange-600 font-semibold">
                                             <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5l-5-5h5v-5a7.5 7.5 0 1 0-15 0v5"/>
                                             </svg>
-                                            {{ $availableStock }} tiket tersisa
+                                            {{ $stockAvailableLocal }} tiket tersisa
                                         </span>
                                     @else
                                         <span class="flex items-center text-green-600 font-medium">
                                             <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                             </svg>
-                                            {{ $availableStock }} tiket tersedia
+                                            {{ $stockAvailableLocal }} tiket tersedia
                                         </span>
                                     @endif
                                     
@@ -112,9 +113,11 @@
                             
                             <!-- Enhanced Quantity Selector -->
                             <div class="flex items-center space-x-4 lg:ml-6">
-                                <button wire:click="decrement({{ $ticket->id }})"
+                                <button type="button"
+                                        wire:click="decrement({{ $ticket->id }})"
+                                        wire:loading.attr="disabled"
                                         class="quantity-btn quantity-btn-minus"
-                                        {{ $quantities[$ticket->id] == 0 ? 'disabled' : '' }}>
+                                        @disabled($quantities[$ticket->id] == 0)>
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M20 12H4"/>
                                     </svg>
@@ -124,9 +127,11 @@
                                     {{ $quantities[$ticket->id] }}
                                 </div>
                                 
-                                <button wire:click="increment({{ $ticket->id }})"
+                                <button type="button"
+                                        wire:click="increment({{ $ticket->id }})"
+                                        wire:loading.attr="disabled"
                                         class="quantity-btn quantity-btn-plus"
-                                        {{ $quantities[$ticket->id] >= $availableStock ? 'disabled' : '' }}>
+                                        @disabled($quantities[$ticket->id] >= $stockAvailableLocal)>
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/>
                                     </svg>
@@ -186,11 +191,11 @@
                     @endif
                     
                     <!-- Enhanced CTA Button -->
-                    <button @click="showSuccessAnimation = true"
+                    <button wire:click="proceedToAttendees"
                             class="w-full btn-cta text-xl py-4 shadow-gold hover:shadow-2xl">
                         <span class="flex items-center justify-center space-x-3">
-                            <span>🛒</span>
-                            <span>Lanjutkan ke Pembayaran</span>
+                            <span>🧾</span>
+                            <span>Lanjutkan Isi Data Peserta</span>
                             <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                             </svg>
@@ -283,6 +288,65 @@
         </div>
     </div>
 </div>
+
+@endif
+
+@if($step === 'attendees')
+<div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+    <div class="text-center mb-8">
+        <h3 class="text-2xl font-display font-bold text-gray-800">👥 Isi Data Peserta</h3>
+        <p class="text-gray-600">Masukkan nama dan nomor HP untuk setiap tiket yang dibeli</p>
+    </div>
+
+    @foreach($tickets as $ticket)
+        @php $qty = (int)($quantities[$ticket->id] ?? 0); @endphp
+        @if($qty > 0)
+            <div class="mb-8">
+                <h4 class="text-lg font-bold text-gray-800 mb-3">{{ $ticket->name }} — {{ $qty }} peserta</h4>
+                <div class="space-y-4">
+                    @for($i = 0; $i < $qty; $i++)
+                        <div wire:key="attendee-{{ $ticket->id }}-{{ $i }}" class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl border border-gray-200 bg-gray-50">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Peserta #{{ $i+1 }}</label>
+                                <input type="text"
+                                       class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                       wire:model.lazy="attendeesData.{{ $ticket->id }}.{{ $i }}.name"
+                                       placeholder="Nama lengkap">
+                                @error("attendeesData.$ticket->id.$i.name")
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor HP</label>
+                                <input type="text"
+                                       class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                       wire:model.lazy="attendeesData.{{ $ticket->id }}.{{ $i }}.phone"
+                                       placeholder="Contoh: 0812xxxxxx">
+                                @error("attendeesData.$ticket->id.$i.phone")
+                                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+            </div>
+        @endif
+    @endforeach
+
+    <div class="flex flex-col sm:flex-row justify-between gap-3 mt-4">
+        <button type="button"
+                wire:click="backToSelect"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 bg-white hover:bg-gray-50">
+            ← Kembali
+        </button>
+        <button type="button"
+                wire:click="submitAttendees"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold shadow-lg hover:opacity-95">
+            Lanjutkan ke Pembayaran →
+        </button>
+    </div>
+</div>
+@endif
 
 @script
 <script>

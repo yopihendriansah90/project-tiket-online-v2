@@ -33,9 +33,20 @@ class ETicketController extends Controller
                 ->with('error', 'Selesaikan pembayaran untuk mengakses e-ticket.');
         }
 
-        // Data QR: pakai token attendee jika ada, jika tidak fallback ke komposit sederhana
-        $attendee = $orderItem->attendees->first();
-        $qrData = $attendee?->unique_token ?? ('ORDERITEM:' . $orderItem->id . '|USER:' . $user->id);
+        // Susun QR per peserta (fallback token sederhana jika unik belum ada)
+        $attendeeQRCodes = $orderItem->attendees->map(function ($a) use ($user, $orderItem) {
+            $token = $a->unique_token ?? ('ATTENDEE:' . $a->id . '|ORDERITEM:' . $orderItem->id . '|USER:' . $user->id);
+            return [
+                'id' => $a->id,
+                'name' => $a->name,
+                'phone' => $a->phone,
+                'token' => $token,
+                'qrUrl' => 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' . urlencode($token),
+            ];
+        });
+
+        // Fallback QR jika tidak ada attendees
+        $qrData = 'ORDERITEM:' . $orderItem->id . '|USER:' . $user->id;
         $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' . urlencode($qrData);
 
         return view('tickets.eticket', [
@@ -44,6 +55,7 @@ class ETicketController extends Controller
             'ticket' => $orderItem->ticket,
             'attendees' => $orderItem->attendees,
             'user' => $user,
+            'attendeeQRCodes' => $attendeeQRCodes,
             'qrUrl' => $qrUrl,
             'qrData' => $qrData,
         ]);

@@ -7,6 +7,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ETicketController;
+use App\Http\Controllers\CheckinController;
 use Illuminate\Support\Facades\Route;
 
 // Route untuk homepage
@@ -58,5 +59,11 @@ Route::middleware('auth')->group(function () {
      Route::get('/account/notifications', fn () => redirect()->route('dashboard', ['tab' => 'notifications']))->name('user.notifications');
      Route::get('/account/favorites', fn () => redirect()->route('dashboard', ['tab' => 'favorites']))->name('user.favorites');
  });
- 
+
+ // Halaman Check-in panitia (scanner + verifikasi token)
+ Route::middleware(['auth', 'role:Event Manager|Super Admin'])->group(function () {
+     Route::get('/checkin', [CheckinController::class, 'index'])->name('checkin.index');
+     Route::post('/checkin/verify', [CheckinController::class, 'verify'])->name('checkin.verify')->middleware('throttle:30,1');
+ });
+
  require __DIR__.'/auth.php';

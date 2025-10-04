@@ -34,9 +34,19 @@ class AttendeeResource extends Resource
                         Forms\Components\TextInput::make('email')
                             ->label('Alamat Email')
                             ->email()
-                            ->required(),
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('phone')
+                            ->label('Nomor HP')
+                            ->required()
+                            ->maxLength(20),
+                        Forms\Components\TextInput::make('checkin_gate')
+                            ->label('Gate/Pos')
+                            ->maxLength(50),
                         Forms\Components\DateTimePicker::make('checked_in_at')
                             ->label('Waktu Check-in'),
+                        Forms\Components\Placeholder::make('unique_token_display')
+                            ->label('Token Unik')
+                            ->content(fn ($record) => $record?->unique_token ?? '-'),
                     ])->columns(2),
 
                 Forms\Components\Section::make('Detail Tiket & Acara')
@@ -84,6 +94,15 @@ class AttendeeResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Nomor HP')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('unique_token')
+                    ->label('Token')
+                    ->copyable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('orderItem.ticket.event.title')
                     ->label('Acara')
@@ -96,13 +115,15 @@ class AttendeeResource extends Resource
                 Tables\Columns\TextColumn::make('seat')
                     ->label('Kursi')
                     ->formatStateUsing(fn ($state) => $state ? "{$state->area} - {$state->row}{$state->number}" : '-'),
-                Tables\Columns\ToggleColumn::make('checked_in_at')
-                    ->label('Check-in')
-                    ->getStateUsing(fn ($record) => !is_null($record->checked_in_at))
-                    ->updateStateUsing(function ($record, $state) {
-                        $record->checked_in_at = $state ? now() : null;
-                        $record->save();
-                    }),
+                Tables\Columns\TextColumn::make('checkin_gate')
+                    ->label('Gate/Pos')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('checked_in_status')
+                    ->label('Status Check-in')
+                    ->badge()
+                    ->getStateUsing(fn ($record) => $record->checked_in_at ? 'Checked-in' : 'Belum')
+                    ->color(fn ($record) => $record->checked_in_at ? 'success' : 'gray')
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('event')
@@ -117,6 +138,34 @@ class AttendeeResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('checkin')
+                    ->label('Check-in')
+                    ->icon('heroicon-m-check')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->form([
+                        Forms\Components\TextInput::make('checkin_gate')
+                            ->label('Gate/Pos')
+                            ->maxLength(50),
+                    ])
+                    ->action(function (Attendee $record, array $data) {
+                        $record->checked_in_at = now();
+                        if (!empty($data['checkin_gate'])) {
+                            $record->checkin_gate = $data['checkin_gate'];
+                        }
+                        $record->save();
+                    })
+                    ->visible(fn (Attendee $record) => is_null($record->checked_in_at)),
+                Tables\Actions\Action::make('undo_checkin')
+                    ->label('Batalkan Check-in')
+                    ->icon('heroicon-m-x-mark')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function (Attendee $record) {
+                        $record->checked_in_at = null;
+                        $record->save();
+                    })
+                    ->visible(fn (Attendee $record) => !is_null($record->checked_in_at)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
