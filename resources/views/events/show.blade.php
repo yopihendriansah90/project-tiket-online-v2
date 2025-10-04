@@ -257,7 +257,7 @@ $title = $event->title . ' - TiketIn';
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Mock related events for now -->
-                    @for($i = 1; $i <= 4)
+                    @for($i = 1; $i <= 4; $i++)
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
                         <div class="relative">
                             <div class="h-48 bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
